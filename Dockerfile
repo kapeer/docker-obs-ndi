@@ -12,9 +12,11 @@ EXPOSE 7960-7970
 EXPOSE 5960
 # for OBS 
 EXPOSE 4455
+# Fluxbox style customization
+ENV FLUXBOX_STYLE=bora_blue
 # Make sure the dependencies are met
 RUN apt update \
-	&& apt install -y tigervnc-standalone-server fluxbox xterm git net-tools python3 python3-numpy python-is-python3 scrot wget curl software-properties-common vlc kmod avahi-daemon sudo ffmpeg \
+	&& apt install -y tigervnc-standalone-server fluxbox xterm git net-tools python3 python3-numpy python-is-python3 scrot wget curl software-properties-common vlc kmod avahi-daemon sudo ffmpeg dillo \
 	&& sed -i 's/geteuid/getppid/' /usr/bin/vlc \
 	&& add-apt-repository ppa:obsproject/obs-studio \
 	&& git clone --branch v1.0.0 --single-branch https://github.com/novnc/noVNC.git /opt/noVNC \
@@ -23,7 +25,8 @@ RUN apt update \
 
 # Add menu entries to the container
 RUN echo "?package(bash):needs=\"X11\" section=\"DockerCustom\" title=\"OBS Screencast\" command=\"obs\"" >> /usr/share/menu/custom-docker \
-	&& echo "?package(bash):needs=\"X11\" section=\"DockerCustom\" title=\"Xterm\" command=\"xterm -ls -bg black -fg white\"" >> /usr/share/menu/custom-docker && update-menus
+	&& echo "?package(bash):needs=\"X11\" section=\"DockerCustom\" title=\"Xterm\" command=\"xterm -ls -bg black -fg white\"" >> /usr/share/menu/custom-docker \
+	&& echo "?package(bash):needs=\"X11\" section=\"DockerCustom\" title=\"Dillo Browser\" command=\"dillo\"" >> /usr/share/menu/custom-docker && update-menus
 
 # ---------------------------------------------------------
 
