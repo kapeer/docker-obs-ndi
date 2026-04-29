@@ -1,14 +1,108 @@
-# Docker Open Broadcaster Software (OBS)
-This container is based on [bb12489/gui-docker](https://github.com/bb12489/gui-docker) & [bb12489/docker-obs](https://github.com/bb12489/docker-obs). The OBS with NDI is incorporated into the container and can be used to stream your desktop.
+# Docker OBS Studio with NDI Support
 
-Here is a screenshot:
-![Alt](https://raw.githubusercontent.com/Daedilus/docker-obs-ndi/master/screenshot.png "Example screenshot")
+This Docker container provides OBS Studio with NDI (Network Device Interface) support, running in a VNC environment. It's based on Ubuntu 24.04 and includes all necessary plugins for professional streaming and broadcasting.
 
-# To run
-You can start the container with:
+## Features
 
-`docker run --shm-size=256m -it -p 5900:5900 -p 5901:5901 -e VNC_PASSWD=123456 daedilus1/docker-obs-ndi:latest`
+- **OBS Studio**: Latest version with full functionality
+- **NDI Support**: DistroAV plugin for NDI input/output
+- **Multi-RTMP**: Plugin for streaming to multiple platforms simultaneously
+- **VNC Access**: Connect via VNC client or web browser
+- **Fluxbox WM**: Lightweight window manager with customizable themes
+- **Web Browser**: Dillo browser for in-container web access
+- **OBS WebSocket**: Enabled by default on port 4455 for remote control
 
-The shm-size argument is to make sure that the webclient does not run out of shared memory and crash. You can change the default VNC password of '123456' on the docker run command to whatever you wish.
+## Quick Start
 
-You can connect with your own VNC client at 5900 or use the webclient at 5901
+```bash
+docker run --shm-size=256m -it \
+  -p 5900:5900 \
+  -p 5901:5901 \
+  -p 4455:4455 \
+  -v obs-config:/config \
+  -e VNC_PASSWD=yourpassword \
+  kap33r/docker-obs-ndi:latest
+```
+
+docker-compose with GPU support
+```bash
+services:
+    obs-ndi:
+        runtime: nvidia
+        environment:
+            VNC_PASSWD: 123456
+            NVIDIA_VISIBLE_DEVICES: all
+            NVIDIA_DRIVER_CAPABILITIES: all
+        networks:
+            br0:
+                ipv4_address: ${YOUR_IP_HERE}
+        shm_size: 256m
+        volumes:
+            - obs_ndi:/config
+        deploy:
+            replicas: 1
+            resources:
+                reservations:
+                    devices:
+                    - driver: nvidia
+                        count: 0
+                        capabilities: [gpu]
+```
+
+## Ports
+
+- `5900`: VNC server (connect with VNC client)
+- `5901`: noVNC web client (connect via browser)
+- `4455`: OBS WebSocket server (for remote control)
+
+## Environment Variables
+
+- `VNC_PASSWD`: VNC password (default: 123456)
+- `FLUXBOX_STYLE`: Fluxbox theme (default: bora_blue)
+
+## Volumes
+
+- `/config`: Persistent storage for OBS configuration and profiles
+
+## Usage
+
+1. **VNC Client**: Connect to `localhost:5900` with your VNC viewer
+2. **Web Browser**: Open `http://localhost:5901/vnc.html` in your browser
+3. **OBS WebSocket**: Connect to `ws://localhost:4455` for remote control
+
+### Desktop Applications
+
+Right-click on the desktop to access the menu:
+- **OBS Screencast**: Launch OBS Studio
+- **Xterm**: Terminal emulator
+- **Dillo Browser**: Lightweight web browser
+
+### OBS Configuration
+
+- OBS settings are saved to `/config/obs-studio`
+- NDI sources are available in OBS under "Sources"
+- Multi-RTMP dock can be added via View → Docks → Multi-RTMP
+
+## Building
+
+```bash
+git clone https://github.com/Daedilus/docker-obs-ndi.git
+cd docker-obs-ndi
+docker build -t kap33r/docker-obs-ndi:latest .
+```
+
+## Requirements
+
+- Docker with support for `--shm-size`
+- At least 2GB RAM recommended
+- GPU acceleration recommended for better performance
+
+## Troubleshooting
+
+- If the web client crashes, increase `--shm-size` to 512m
+- OBS configuration persists in the `/config` volume
+- Check container logs with `docker logs <container_id>`
+
+## Credits
+
+forked from [Daedilus/docker-obs-ndi](https://github.com/Daedilus/docker-obs-ndi)
