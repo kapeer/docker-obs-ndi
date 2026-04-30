@@ -16,9 +16,12 @@ EXPOSE 4455
 ENV FLUXBOX_STYLE=bora_blue
 # Make sure the dependencies are met
 RUN apt update \
-	&& apt install -y tigervnc-standalone-server fluxbox xterm git net-tools python3 python3-numpy python-is-python3 scrot wget curl software-properties-common vlc kmod avahi-daemon sudo ffmpeg epiphany-browser falkon dbus-x11 dbus-user-session \
+	&& apt install -y tigervnc-standalone-server fluxbox xterm git net-tools python3 python3-numpy python-is-python3 scrot wget curl software-properties-common vlc kmod avahi-daemon sudo ffmpeg dbus-x11 dbus-user-session ca-certificates \
 	&& sed -i 's/geteuid/getppid/' /usr/bin/vlc \
 	&& add-apt-repository ppa:obsproject/obs-studio \
+	&& wget -q -O /tmp/google-chrome-stable.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
+	&& apt install -y /tmp/google-chrome-stable.deb \
+	&& rm -f /tmp/google-chrome-stable.deb \
 	&& git clone --branch v1.0.0 --single-branch https://github.com/novnc/noVNC.git /opt/noVNC \
 	&& git clone --branch v0.8.0 --single-branch https://github.com/novnc/websockify.git /opt/noVNC/utils/websockify \
 	&& ln -s /opt/noVNC/vnc.html /opt/noVNC/index.html
@@ -26,7 +29,7 @@ RUN apt update \
 # Add menu entries to the container
 RUN echo "?package(bash):needs=\"X11\" section=\"DockerCustom\" title=\"OBS Screencast\" command=\"vglrun obs\"" >> /usr/share/menu/custom-docker \
 	&& echo "?package(bash):needs=\"X11\" section=\"DockerCustom\" title=\"Xterm\" command=\"xterm -ls -bg black -fg white\"" >> /usr/share/menu/custom-docker \
-	&& echo "?package(bash):needs=\"X11\" section=\"DockerCustom\" title=\"Web Browser\" command=\"/opt/epiphany-launch.sh\"" >> /usr/share/menu/custom-docker && update-menus
+	&& echo "?package(bash):needs=\"X11\" section=\"DockerCustom\" title=\"Web Browser\" command=\"/opt/chromium-launch.sh\"" >> /usr/share/menu/custom-docker && update-menus
 
 # ---------------------------------------------------------
 
@@ -69,7 +72,7 @@ WORKDIR /opt
 # Copy local files
 COPY container_startup.sh ./container_startup.sh
 COPY x11vnc_entrypoint.sh ./x11vnc_entrypoint.sh
-COPY epiphany-launch.sh ./epiphany-launch.sh
+COPY chromium-launch.sh ./chromium-launch.sh
 COPY startup.sh ./startup_scripts/startup.sh
 RUN chmod -R a+x ./*.sh
 
