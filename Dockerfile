@@ -16,7 +16,7 @@ EXPOSE 4455
 ENV FLUXBOX_STYLE=bora_blue
 # Make sure the dependencies are met
 RUN apt update \
-	&& apt install -y tigervnc-standalone-server fluxbox xterm git net-tools python3 python3-numpy python-is-python3 scrot wget curl software-properties-common vlc kmod avahi-daemon sudo ffmpeg dillo \
+	&& apt install -y tigervnc-standalone-server fluxbox xterm git net-tools python3 python3-numpy python-is-python3 scrot wget curl software-properties-common vlc kmod avahi-daemon sudo ffmpeg epiphany-browser falkon dbus-x11 dbus-user-session \
 	&& sed -i 's/geteuid/getppid/' /usr/bin/vlc \
 	&& add-apt-repository ppa:obsproject/obs-studio \
 	&& git clone --branch v1.0.0 --single-branch https://github.com/novnc/noVNC.git /opt/noVNC \
@@ -26,7 +26,7 @@ RUN apt update \
 # Add menu entries to the container
 RUN echo "?package(bash):needs=\"X11\" section=\"DockerCustom\" title=\"OBS Screencast\" command=\"vglrun obs\"" >> /usr/share/menu/custom-docker \
 	&& echo "?package(bash):needs=\"X11\" section=\"DockerCustom\" title=\"Xterm\" command=\"xterm -ls -bg black -fg white\"" >> /usr/share/menu/custom-docker \
-	&& echo "?package(bash):needs=\"X11\" section=\"DockerCustom\" title=\"Dillo Browser\" command=\"dillo\"" >> /usr/share/menu/custom-docker && update-menus
+	&& echo "?package(bash):needs=\"X11\" section=\"DockerCustom\" title=\"Web Browser\" command=\"/opt/epiphany-launch.sh\"" >> /usr/share/menu/custom-docker && update-menus
 
 # ---------------------------------------------------------
 
@@ -69,6 +69,7 @@ WORKDIR /opt
 # Copy local files
 COPY container_startup.sh ./container_startup.sh
 COPY x11vnc_entrypoint.sh ./x11vnc_entrypoint.sh
+COPY epiphany-launch.sh ./epiphany-launch.sh
 COPY startup.sh ./startup_scripts/startup.sh
 RUN chmod -R a+x ./*.sh
 

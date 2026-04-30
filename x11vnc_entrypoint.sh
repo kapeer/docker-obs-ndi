@@ -11,9 +11,19 @@ fi
 FLUXBOX_STYLE=${FLUXBOX_STYLE:-bora_blue}
 mkdir -p /root/.fluxbox
 if [ ! -f /root/.fluxbox/init ]; then
-  cp /usr/share/fluxbox/init /root/.fluxbox/init
+  if [ -f /etc/X11/fluxbox/init ]; then
+    cp /etc/X11/fluxbox/init /root/.fluxbox/init
+  else
+    cp /usr/share/fluxbox/init /root/.fluxbox/init
+  fi
 fi
-sed -i "s|^session.styleFile:.*|session.styleFile: /usr/share/fluxbox/styles/$FLUXBOX_STYLE|" /root/.fluxbox/init
+STYLE_FILE="/usr/share/fluxbox/styles/$FLUXBOX_STYLE"
+if [ ! -e "$STYLE_FILE" ]; then
+  echo "Fluxbox style '$FLUXBOX_STYLE' not found, falling back to ubuntu-dark" >&2
+  FLUXBOX_STYLE=ubuntu-dark
+  STYLE_FILE="/usr/share/fluxbox/styles/$FLUXBOX_STYLE"
+fi
+sed -i "s|^session.styleFile:.*|session.styleFile: $STYLE_FILE|" /root/.fluxbox/init
 
 # Start the window manager in the foreground so the VNC session remains alive
 exec /usr/bin/fluxbox

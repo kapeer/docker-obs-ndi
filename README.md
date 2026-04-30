@@ -9,7 +9,7 @@ This Docker container provides OBS Studio with NDI (Network Device Interface) su
 - **Multi-RTMP**: Plugin for streaming to multiple platforms simultaneously
 - **VNC Access**: Connect via VNC client or web browser
 - **Fluxbox WM**: Lightweight window manager with customizable themes
-- **Web Browser**: Dillo browser for in-container web access
+- **Web Browser**: Epiphany browser for in-container web access and JavaScript support
 - **OBS WebSocket**: Enabled by default on port 4455 for remote control
 
 ## Quick Start
@@ -75,7 +75,7 @@ services:
 Right-click on the desktop to access the menu:
 - **OBS Screencast**: Launch OBS Studio with VirtualGL (`vglrun obs`)
 - **Xterm**: Terminal emulator
-- **Dillo Browser**: Lightweight web browser
+- **Web Browser**: Epiphany browser (launched with sandbox disabled for container use)
 
 ### OBS Configuration
 
