@@ -73,7 +73,7 @@ services:
 ### Desktop Applications
 
 Right-click on the desktop to access the menu:
-- **OBS Screencast**: Launch OBS Studio
+- **OBS Screencast**: Launch OBS Studio with VirtualGL (`vglrun obs`)
 - **Xterm**: Terminal emulator
 - **Dillo Browser**: Lightweight web browser
 

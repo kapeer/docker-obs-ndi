@@ -24,7 +24,7 @@ RUN apt update \
 	&& ln -s /opt/noVNC/vnc.html /opt/noVNC/index.html
 
 # Add menu entries to the container
-RUN echo "?package(bash):needs=\"X11\" section=\"DockerCustom\" title=\"OBS Screencast\" command=\"obs\"" >> /usr/share/menu/custom-docker \
+RUN echo "?package(bash):needs=\"X11\" section=\"DockerCustom\" title=\"OBS Screencast\" command=\"vglrun obs\"" >> /usr/share/menu/custom-docker \
 	&& echo "?package(bash):needs=\"X11\" section=\"DockerCustom\" title=\"Xterm\" command=\"xterm -ls -bg black -fg white\"" >> /usr/share/menu/custom-docker \
 	&& echo "?package(bash):needs=\"X11\" section=\"DockerCustom\" title=\"Dillo Browser\" command=\"dillo\"" >> /usr/share/menu/custom-docker && update-menus
 
@@ -35,8 +35,10 @@ FROM vnc AS obs
 RUN apt update \
 	&& mkdir -p /config/obs-studio /root/.config/ \
 	&& ln -s /config/obs-studio/ /root/.config/obs-studio \
-	# Install obs studio
-	&& apt install -y obs-studio
+	# Install VirtualGL and OBS Studio
+	&& wget -q -O /tmp/virtualgl_3.1.4_amd64.deb https://github.com/VirtualGL/virtualgl/releases/download/3.1.4/virtualgl_3.1.4_amd64.deb \
+	&& apt install -y /tmp/virtualgl_3.1.4_amd64.deb obs-studio \
+	&& rm -f /tmp/virtualgl_3.1.4_amd64.deb
 
 # ---------------------------------------------------------
 
