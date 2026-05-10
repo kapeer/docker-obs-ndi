@@ -16,7 +16,7 @@ EXPOSE 4455
 ENV FLUXBOX_STYLE=bora_blue
 # Make sure the dependencies are met
 RUN apt update \
-	&& apt install -y tigervnc-standalone-server fluxbox xterm git net-tools python3 python3-numpy python-is-python3 scrot wget curl software-properties-common vlc kmod avahi-daemon sudo ffmpeg dbus-x11 dbus-user-session ca-certificates \
+	&& apt install -y tigervnc-standalone-server fluxbox xterm git net-tools python3 python3-numpy python-is-python3 scrot wget curl software-properties-common vlc kmod avahi-daemon sudo ffmpeg dbus-x11 dbus-user-session ca-certificates libnvidia-compute-580 libnvidia-decode-580 libnvidia-encode-580 libnvidia-fbc1-580 libnvidia-gl-580 nvidia-compute-utils-580 libnvidia-cfg1-580 \
 	&& sed -i 's/geteuid/getppid/' /usr/bin/vlc \
 	&& add-apt-repository ppa:obsproject/obs-studio \
 	&& wget -q -O /tmp/google-chrome-stable.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
