@@ -3,6 +3,10 @@ OUR_IP=$(hostname -i)
 rm -rf /tmp/.X*
 # Set default VNC password if not provided
 VNC_PASSWD=${VNC_PASSWD:-123456}
+
+# Start pulseaudio
+pulseaudio -D --exit-idle-time=-1 --system=false --disallow-exit
+
 # start VNC server (Uses VNC_PASSWD environment variable)
 mkdir -p /tmp/.vnc && echo "$VNC_PASSWD" | vncpasswd -f > /tmp/.vnc/passwd
 vncserver :0 -localhost no -nolisten -rfbauth /tmp/.vnc/passwd -xstartup /opt/x11vnc_entrypoint.sh
