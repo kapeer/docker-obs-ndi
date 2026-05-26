@@ -18,7 +18,6 @@ ENV FLUXBOX_STYLE=bora_blue
 RUN apt update \
 	&& apt install -y tigervnc-standalone-server fluxbox xterm git net-tools python3 python3-numpy python-is-python3 \
 	scrot wget curl software-properties-common vlc kmod avahi-daemon sudo ffmpeg pulseaudio dbus-x11 dbus-user-session ca-certificates \
-	libnvidia-compute-580 libnvidia-decode-580 libnvidia-encode-580 libnvidia-fbc1-580 libnvidia-gl-580 nvidia-compute-utils-580 libnvidia-cfg1-580 \
 	&& sed -i 's/geteuid/getppid/' /usr/bin/vlc \
 	&& add-apt-repository ppa:obsproject/obs-studio \
 	&& wget -q -O /tmp/google-chrome-stable.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
@@ -75,8 +74,14 @@ WORKDIR /opt
 COPY container_startup.sh ./container_startup.sh
 COPY x11vnc_entrypoint.sh ./x11vnc_entrypoint.sh
 COPY chromium-launch.sh ./chromium-launch.sh
+COPY install_nvidia_libs.sh ./install_nvidia_libs.sh
 COPY startup.sh ./startup_scripts/startup.sh
 RUN chmod -R a+x ./*.sh
+
+ENV VGL_DISPLAY=egl
+ENV MAJOR_VERSION=
+
+RUN ./install_nvidia_libs.sh "$MAJOR_VERSION"
 
 VOLUME ["/config"]
 ENTRYPOINT ["/opt/container_startup.sh"]

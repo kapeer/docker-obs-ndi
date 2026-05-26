@@ -1,68 +1,8 @@
-# Docker OBS Studio with NDI Support
-
-This Docker container provides OBS Studio with NDI (Network Device Interface) support, running in a VNC environment. It's based on Ubuntu 24.04 and includes all necessary plugins for professional streaming and broadcasting.
-
-## Features
-
-- **OBS Studio**: Latest version with full functionality
-- **NDI Support**: DistroAV plugin for NDI input/output
-- **Multi-RTMP**: Plugin for streaming to multiple platforms simultaneously
-- **VNC Access**: Connect via VNC client or web browser
-- **Fluxbox WM**: Lightweight window manager with customizable themes
-- **Web Browser**: Google Chrome for in-container web access
-- **OBS WebSocket**: Enabled by default on port 4455 for remote control
-
-## Quick Start
-
-```bash
-docker run --shm-size=256m -it \
-  -p 5900:5900 \
-  -p 5901:5901 \
-  -p 4455:4455 \
-  -v obs-config:/config \
-  -e VNC_PASSWD=yourpassword \
-  kap33r/docker-obs-ndi:latest
-```
-
-docker-compose with GPU support
-```bash
-services:
-    obs-ndi:
-        runtime: nvidia
-        environment:
-            VNC_PASSWD: 123456
-            NVIDIA_VISIBLE_DEVICES: all
-            NVIDIA_DRIVER_CAPABILITIES: all
-        networks:
-            br0:
-                ipv4_address: ${YOUR_IP_HERE}
-        shm_size: 256m
-        volumes:
-            - obs_ndi:/config
-        deploy:
-            replicas: 1
-            resources:
-                reservations:
-                    devices:
-                    - driver: nvidia
-                        count: 0
-                        capabilities: [gpu]
-```
-
-## Ports
-
-- `5900`: VNC server (connect with VNC client)
-- `5901`: noVNC web client (connect via browser)
-- `4455`: OBS WebSocket server (for remote control)
-
 ## Environment Variables
 
 - `VNC_PASSWD`: VNC password (default: 123456)
 - `FLUXBOX_STYLE`: Fluxbox theme (default: bora_blue)
-
-## Volumes
-
-- `/config`: Persistent storage for OBS configuration and profiles
+- **MAJOR_VERSION**: Specify the major version of nvidia drivers to bundle into the image (default: 580)
 
 ## Usage
 
@@ -99,7 +39,7 @@ docker build -t kap33r/docker-obs-ndi:latest .
 
 ## Troubleshooting
 
-- If the web client crashes, increase `--shm-size` to 512m
+- If the web client crashes, increase `--shm-size`
 - OBS configuration persists in the `/config` volume
 - Check container logs with `docker logs <container_id>`
 
