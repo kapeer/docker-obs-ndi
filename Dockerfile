@@ -40,9 +40,9 @@ RUN apt update \
 	&& mkdir -p /config/obs-studio /root/.config/ \
 	&& ln -s /config/obs-studio/ /root/.config/obs-studio \
 	# Install VirtualGL and OBS Studio
-	&& wget -q -O /tmp/virtualgl_3.1.4_amd64.deb https://github.com/VirtualGL/virtualgl/releases/download/3.1.4/virtualgl_3.1.4_amd64.deb \
-	&& apt install -y /tmp/virtualgl_3.1.4_amd64.deb obs-studio \
-	&& rm -f /tmp/virtualgl_3.1.4_amd64.deb
+	&& wget -q -O /tmp/virtualgl_3.1.5_amd64.deb https://github.com/VirtualGL/virtualgl/releases/download/3.1.5/virtualgl_3.1.5_amd64.deb \
+	&& apt install -y /tmp/virtualgl_3.1.5_amd64.deb obs-studio \
+	&& rm -f /tmp/virtualgl_3.1.5_amd64.deb
 
 # ---------------------------------------------------------
 
@@ -58,7 +58,7 @@ RUN wget -q -O /tmp/distroav.deb https://github.com/DistroAV/DistroAV/releases/d
 	&& dpkg -i /tmp/distroav.deb
 	
 # Download and install the plugins for NDI
-RUN wget -q -O /tmp/obs-multi-rtmp.deb https://github.com/sorayuki/obs-multi-rtmp/releases/download/0.7.3.2/obs-multi-rtmp-0.7.3.0-x86_64-linux-gnu.deb \
+RUN wget -q -O /tmp/obs-multi-rtmp.deb https://github.com/sorayuki/obs-multi-rtmp/releases/download/0.7.4.3/obs-multi-rtmp-0.7.4.0-x86_64-linux-gnu-ubuntu-24.04.deb \
 	&& dpkg -i /tmp/obs-multi-rtmp.deb
 
 # Cleanup
